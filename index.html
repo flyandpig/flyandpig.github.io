@@ -15,15 +15,25 @@
       theme: {
         extend: {
           colors: {
-            primary: '#333333',     // 苹果风格深灰主色
-            secondary: '#6E6E73',   // 苹果次要文本色
-            accent: '#0071E3',      // 苹果蓝强调色
-            light: '#F5F5F7',       // 苹果背景灰
-            border: '#E2E2E7'       // 苹果边框色
+            primary: '#333333',
+            secondary: '#6E6E73',
+            accent: '#0071E3',
+            light: '#F5F5F7',
+            border: '#E2E2E7'
           },
           fontFamily: {
             sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
           },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'slide-in-left': 'slideInLeft 0.8s ease-out',
+            'slide-in-right': 'slideInRight 0.8s ease-out',
+            'fade-in': 'fadeIn 1s ease-out',
+            'gradient': 'gradient 15s ease infinite',
+            'shimmer': 'shimmer 3s infinite',
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
         },
       }
     }
@@ -35,90 +45,521 @@
         content-visibility: auto;
       }
       .transition-subtle {
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      }
+      .glass-dark {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(30px) saturate(180%);
+        -webkit-backdrop-filter: blur(30px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      }
+      .glass-strong {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(40px) saturate(200%);
+        -webkit-backdrop-filter: blur(40px) saturate(200%);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
       }
     }
   </style>
   
   <style>
+    * {
+      scroll-behavior: smooth;
+    }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
+      background: #0a0a0f;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    /* 高级渐变背景层 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at top left, rgba(20, 20, 35, 0.8) 0%, transparent 50%),
+        radial-gradient(ellipse at top right, rgba(15, 15, 30, 0.6) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, rgba(25, 25, 40, 0.7) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(10, 10, 25, 0.8) 0%, transparent 50%),
+        linear-gradient(135deg, rgba(15, 15, 25, 0.95) 0%, rgba(10, 10, 20, 0.98) 50%, rgba(20, 20, 30, 0.95) 100%);
+      background-size: 100% 100%;
+      pointer-events: none;
+      z-index: 0;
+      animation: subtleShift 30s ease-in-out infinite;
+    }
+    
+    /* 微妙的背景动画 */
+    @keyframes subtleShift {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.98;
+        transform: scale(1.01);
+      }
+    }
+    
+    /* 高级纹理层 */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.01) 2px, rgba(255, 255, 255, 0.01) 4px),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.01) 2px, rgba(255, 255, 255, 0.01) 4px);
+      background-size: 100px 100px;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3;
+    }
+    
+    /* 动态渐变背景动画 */
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* 浮动动画 */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    /* 史迪仔装饰动画延迟 */
+    .stitch-decoration {
+      animation-delay: 1s;
+    }
+    
+    /* 新罗马字体 */
+    .font-times {
+      font-family: 'Times New Roman', Times, serif;
+    }
+    
+    /* 发光动画 */
+    @keyframes glow {
+      from {
+        box-shadow: 0 0 20px rgba(0, 113, 227, 0.3), 0 0 40px rgba(0, 113, 227, 0.2);
+      }
+      to {
+        box-shadow: 0 0 30px rgba(0, 113, 227, 0.5), 0 0 60px rgba(0, 113, 227, 0.3);
+      }
+    }
+    
+    /* 滑入动画 */
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* 闪烁动画 */
+    @keyframes shimmer {
+      0% {
+        background-position: -1000px 0;
+      }
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+    
+    /* 装饰性粒子背景 */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.08);
+      animation: float 8s ease-in-out infinite;
     }
     
     /* 苹果风格滚动条 */
     ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: transparent;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(155, 155, 155, 0.5);
-      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: rgba(100, 100, 100, 0.7);
+      background: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* 卡片悬停效果 */
+    .card-hover {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* 标签悬停效果 */
+    .tag-hover {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tag-hover::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.5s;
+    }
+    
+    .tag-hover:hover::before {
+      left: 100%;
+    }
+    
+    .tag-hover:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0, 113, 227, 0.3);
+    }
+    
+    /* 图标旋转动画 */
+    .icon-spin:hover {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* 链接下划线动画 */
+    .link-underline {
+      position: relative;
+    }
+    
+    .link-underline::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(147, 197, 253, 0.8));
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+    
+    .link-underline:hover::after {
+      width: 100%;
+    }
+    
+    /* 纸飞机样式 */
+    .paper-plane {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0;
+    }
+    
+    .paper-plane svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    }
+    
+    /* 纸飞机飞行动画 */
+    @keyframes flyPath1 {
+      0% {
+        opacity: 0;
+        transform: translate(-100px, 100vh) rotate(-45deg) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+      }
+      50% {
+        transform: translate(50vw, 30vh) rotate(15deg) scale(1);
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(100vw + 100px), -100px) rotate(45deg) scale(0.5);
+      }
+    }
+    
+    @keyframes flyPath2 {
+      0% {
+        opacity: 0;
+        transform: translate(calc(100vw + 100px), 50vh) rotate(135deg) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+      }
+      50% {
+        transform: translate(40vw, 60vh) rotate(90deg) scale(1);
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-100px, calc(100vh + 100px)) rotate(225deg) scale(0.5);
+      }
+    }
+    
+    @keyframes flyPath3 {
+      0% {
+        opacity: 0;
+        transform: translate(30vw, -100px) rotate(-90deg) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+      }
+      50% {
+        transform: translate(70vw, 50vh) rotate(0deg) scale(1);
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(100vw + 100px), calc(100vh + 100px)) rotate(90deg) scale(0.5);
+      }
+    }
+    
+    .plane-path-1 {
+      animation: flyPath1 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation-delay: 0s;
+    }
+    
+    .plane-path-2 {
+      animation: flyPath2 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation-delay: 2s;
+    }
+    
+    .plane-path-3 {
+      animation: flyPath3 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      animation-delay: 4s;
+    }
+    
+    /* 纸飞机轻微摆动效果 */
+    @keyframes planeWobble {
+      0%, 100% {
+        transform: rotate(0deg);
+      }
+      25% {
+        transform: rotate(5deg);
+      }
+      75% {
+        transform: rotate(-5deg);
+      }
     }
   </style>
 </head>
 
-<body class="bg-white text-primary">
-  <div class="min-h-screen flex flex-col md:flex-row max-w-5xl mx-auto shadow-sm">
+<body>
+  <!-- 装饰性粒子背景 -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- 纸飞机 -->
+  <div class="paper-plane plane-path-1" id="plane1">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="rgba(255, 255, 255, 0.9)" stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+    </svg>
+  </div>
+  <div class="paper-plane plane-path-2" id="plane2">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="rgba(255, 255, 255, 0.9)" stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+    </svg>
+  </div>
+  <div class="paper-plane plane-path-3" id="plane3">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 21L23 12L2 3V10L17 12L2 14V21Z" fill="rgba(255, 255, 255, 0.9)" stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+    </svg>
+  </div>
+  
+  <!-- 主容器 -->
+  <div class="relative z-10 min-h-screen flex flex-col md:flex-row max-w-6xl mx-auto p-4 md:p-8">
     <!-- 左侧：基本信息 -->
-    <aside class="bg-light md:w-1/3 p-8 flex flex-col items-center">
-      <!-- 个人照片 -->
-      <div class="w-48 h-48 rounded-full overflow-hidden mb-6 border border-border shadow-sm">
-        <img src="selfphoto.jpg" alt="个人照片" class="w-full h-full object-cover transition-subtle hover:scale-105">
+    <aside class="glass-dark md:w-1/3 p-8 md:p-10 flex flex-col items-center rounded-3xl shadow-2xl mb-6 md:mb-0 md:mr-6 card-hover animate-slide-in-left">
+      <!-- 个人照片容器（包含照片和史迪仔） -->
+      <div class="relative mb-6 animate-float">
+        <!-- 个人照片 - 带光晕效果 -->
+        <div class="w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-2xl relative">
+          <div class="absolute inset-0 rounded-full bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 opacity-20 animate-pulse-slow"></div>
+          <img src="selfphoto.jpg" alt="个人照片" class="w-full h-full object-cover relative z-10 transition-subtle hover:scale-110">
+          <div class="absolute inset-0 rounded-full border-2 border-white opacity-50 animate-glow"></div>
+        </div>
+        
+        <!-- 史迪仔装饰 - 在照片外面 -->
+        <div class="absolute -bottom-6 -left-6 z-20 w-16 h-16 animate-float stitch-decoration">
+          <!-- 装饰性背景光晕 -->
+          <div class="absolute -inset-1 rounded-2xl bg-gradient-to-br from-blue-400/20 via-purple-400/20 to-pink-400/20 blur-md animate-pulse-slow"></div>
+          <!-- 毛玻璃边框容器 -->
+          <div class="relative w-full h-full rounded-2xl glass-strong border-2 border-white/30 shadow-2xl overflow-hidden backdrop-blur-xl">
+            <!-- 图片 -->
+            <img src="shidizai.jpg" alt="史迪仔" class="w-full h-full object-cover transition-subtle hover:scale-110">
+            <!-- 顶部高光效果 -->
+            <div class="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/15 to-transparent pointer-events-none"></div>
+            <!-- 底部阴影渐变 -->
+            <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>
+          </div>
+        </div>
       </div>
       
       <!-- 姓名与职位 -->
-      <h1 class="text-2xl md:text-3xl font-semibold mb-2">Tianwei Bai</h1>
-      <p class="text-secondary mb-8 border-b border-border pb-4">Undergraduate Student</p>
+      <h1 class="text-3xl md:text-4xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent animate-fade-in drop-shadow-lg">
+        Tianwei Bai
+      </h1>
+      <p class="text-white/90 mb-8 border-b-2 border-white/30 pb-4 text-lg font-medium animate-fade-in">
+        Undergraduate Student
+      </p>
       
       <!-- 联系方式 -->
-      <div class="w-full space-y-4">
-        <div class="flex items-center space-x-3 group">
-          <i class="fa fa-envelope-o w-5 text-center text-secondary group-hover:text-accent transition-subtle"></i>
-          <a href="2220010901@stu.lntu.edu.cn" class="text-primary hover:text-accent transition-subtle">2220010901@stu.lntu.edu.cn</a>
+      <div class="w-full space-y-5 animate-fade-in">
+        <div class="flex items-center space-x-4 group glass-strong p-4 rounded-xl transition-subtle hover:shadow-xl hover:scale-105">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center icon-spin shadow-lg">
+            <i class="fa fa-envelope-o text-white"></i>
+          </div>
+          <a href="mailto:2220010901@stu.lntu.edu.cn" class="text-white hover:text-blue-200 transition-subtle link-underline font-medium">
+            2220010901@stu.lntu.edu.cn
+          </a>
         </div>
         
-        <div class="flex items-center space-x-3">
-          <i class="fa fa-phone w-5 text-center text-secondary"></i>
-          <span class="text-primary">13519353268</span>
+        <div class="flex items-center space-x-4 group glass-strong p-4 rounded-xl transition-subtle hover:shadow-xl hover:scale-105">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center shadow-lg">
+            <i class="fa fa-phone text-white"></i>
+          </div>
+          <span class="text-white font-medium">13519353268</span>
         </div>
         
-        <div class="flex items-center space-x-3">
-          <i class="fa fa-map-marker w-5 text-center text-secondary"></i>
-          <span class="text-primary">Huludao Liaoning</span>
+        <div class="flex items-center space-x-4 group glass-strong p-4 rounded-xl transition-subtle hover:shadow-xl hover:scale-105">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center shadow-lg">
+            <i class="fa fa-map-marker text-white"></i>
+          </div>
+          <span class="text-white font-medium">Huludao Liaoning</span>
         </div>
-        
-       
       </div>
       
-      <!-- 技能标签 -->
-      <div class="mt-10 w-full">
-        <h3 class="text-base font-medium mb-4 border-b border-border pb-2">Research Direction</h3>
-        <div class="flex flex-wrap gap-2">
-          <span class="bg-white border border-border px-3 py-1 rounded-full text-sm hover:border-accent transition-subtle">DL</span>
-          <span class="bg-white border border-border px-3 py-1 rounded-full text-sm hover:border-accent transition-subtle">ML</span>
-          <span class="bg-white border border-border px-3 py-1 rounded-full text-sm hover:border-accent transition-subtle">MLLM</span>
-          <span class="bg-white border border-border px-3 py-1 rounded-full text-sm hover:border-accent transition-subtle">CV</span>
+      <!-- 研究方向标签 -->
+      <div class="mt-10 w-full animate-fade-in">
+        <h3 class="text-lg font-bold mb-5 text-center bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+          Research Direction
+        </h3>
+        <div class="grid grid-cols-2 gap-3 w-full">
+          <span class="glass-strong border-2 border-white/40 px-4 py-2.5 rounded-full text-sm font-semibold tag-hover text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white hover:border-transparent hover:shadow-lg text-center whitespace-nowrap">
+            DL
+          </span>
+          <span class="glass-strong border-2 border-white/40 px-4 py-2.5 rounded-full text-sm font-semibold tag-hover text-white hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white hover:border-transparent hover:shadow-lg text-center whitespace-nowrap">
+            ML
+          </span>
+          <span class="glass-strong border-2 border-white/40 px-4 py-2.5 rounded-full text-sm font-semibold tag-hover text-white hover:bg-gradient-to-r hover:from-pink-500 hover:to-red-500 hover:text-white hover:border-transparent hover:shadow-lg text-center whitespace-nowrap">
+            MLLM
+          </span>
+          <span class="glass-strong border-2 border-white/40 px-4 py-2.5 rounded-full text-sm font-semibold tag-hover text-white hover:bg-gradient-to-r hover:from-teal-500 hover:to-cyan-500 hover:text-white hover:border-transparent hover:shadow-lg text-center whitespace-nowrap">
+            CV
+          </span>
         </div>
       </div>
     </aside>
     
     <!-- 右侧：核心内容 -->
-    <main class="md:w-2/3 p-8 md:p-12 bg-white">
+    <main class="md:w-2/3 glass-strong p-8 md:p-12 rounded-3xl shadow-2xl card-hover animate-slide-in-right">
       <!-- 个人简介 -->
-      <section class="mb-12">
-        <h2 class="text-xl font-semibold mb-5 flex items-center">
-          <i class="fa fa-user-circle-o mr-3 text-secondary"></i>Personal Profile
+      <section class="mb-12 animate-fade-in">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-lg">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mr-4 shadow-lg">
+            <i class="fa fa-user-circle-o text-white text-xl"></i>
+          </div>
+          Personal Profile
         </h2>
-        <div class="pl-1 border-l-2 border-border space-y-4">
-          <p class="leading-relaxed text-gray-700">
-            I completed my undergraduate studies in Software Engineering at the School of Software, Liaoning Technical University. During my undergraduate years, I obtained several awards through my own efforts and have a keen interest in research on multimodal large language models. Currently, I have been recommended for admission to the School of Computer Science and Technology, Zhejiang University of Technology, and my supervisor is <a href="https://jingchenchen.github.io/" class="text-primary hover:text-accent transition-subtle" style="color: cornflowerblue;" >Chenchen Jing</a> . I will learn from him in the days ahead.
+        <div class="pl-6 border-l-4 border-gradient-to-b from-blue-400 via-purple-400 to-pink-400 space-y-4 relative">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+          <p class="leading-relaxed text-white/90 text-lg relative z-10 glass-strong p-6 rounded-xl shadow-xl font-times">
+            I completed my undergraduate studies in Software Engineering at the School of Software, Liaoning Technical University. During my undergraduate years, I obtained several awards through my own efforts and have a keen interest in research on multimodal large language models. Currently, I have been recommended for admission to the School of Computer Science and Technology, Zhejiang University of Technology, and my supervisor is <a href="https://jingchenchen.github.io/" class="font-semibold link-underline text-blue-200 hover:text-white transition-subtle" target="_blank" rel="noopener noreferrer">Chenchen Jing</a>. I will learn from him in the days ahead.
+          </p>
+        </div>
+      </section>
+      
+      <!-- Selected Publications -->
+      <section class="mb-12 animate-fade-in">
+        <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent drop-shadow-lg">
+          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center mr-4 shadow-lg">
+            <i class="fa fa-file-text-o text-white text-xl"></i>
+          </div>
+          Selected Publications
+        </h2>
+        <div class="pl-6 border-l-4 border-gradient-to-b from-blue-400 via-purple-400 to-pink-400 space-y-4 relative">
+          <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 via-purple-400 to-pink-400 rounded-full shadow-lg"></div>
+          <p class="leading-relaxed text-white/70 text-lg relative z-10 glass-strong p-6 rounded-xl shadow-xl italic text-center">
+            No publications available at the moment
           </p>
         </div>
       </section>
@@ -129,8 +570,86 @@
   </div>
   
   <!-- 页脚 -->
-  <footer class="max-w-5xl mx-auto text-center py-5 text-secondary text-xs mt-4">
-    <p>© 2025 TianWei Bai | 白天蔚</p>
+  <footer class="relative z-10 max-w-6xl mx-auto text-center py-6 text-white/90 text-sm mt-8 glass-strong rounded-2xl shadow-xl animate-fade-in">
+    <p class="font-medium">© 2025 TianWei Bai | 白天蔚</p>
   </footer>
+  
+  <script>
+    // 创建装饰性粒子
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const size = Math.random() * 4 + 2;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const delay = Math.random() * 8;
+        const duration = Math.random() * 4 + 6;
+        
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = x + '%';
+        particle.style.top = y + '%';
+        particle.style.animationDelay = delay + 's';
+        particle.style.animationDuration = duration + 's';
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // 页面加载完成后创建粒子
+    window.addEventListener('DOMContentLoaded', createParticles);
+    
+    // 添加滚动时的视差效果
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const particles = document.querySelectorAll('.particle');
+      particles.forEach((particle, index) => {
+        const speed = (index % 3 + 1) * 0.5;
+        particle.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    });
+    
+    // 纸飞机动画控制
+    function initPaperPlanes() {
+      const planes = document.querySelectorAll('.paper-plane');
+      
+      // 为每个纸飞机添加轻微的摆动效果
+      planes.forEach((plane, index) => {
+        // 添加随机延迟，让飞行更自然
+        const randomDelay = Math.random() * 2;
+        plane.style.animationDelay = `${randomDelay}s`;
+        
+        // 添加鼠标移动时的交互效果（可选）
+        document.addEventListener('mousemove', (e) => {
+          const rect = plane.getBoundingClientRect();
+          const planeX = rect.left + rect.width / 2;
+          const planeY = rect.top + rect.height / 2;
+          const mouseX = e.clientX;
+          const mouseY = e.clientY;
+          const distance = Math.sqrt(
+            Math.pow(mouseX - planeX, 2) + Math.pow(mouseY - planeY, 2)
+          );
+          
+          // 当鼠标靠近纸飞机时，增加亮度
+          if (distance < 150) {
+            plane.style.filter = `drop-shadow(0 0 20px rgba(255, 255, 255, 0.8)) brightness(${1 + (150 - distance) / 300})`;
+          } else {
+            plane.style.filter = 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.5))';
+          }
+        });
+      });
+    }
+    
+    // 页面加载完成后初始化纸飞机
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(initPaperPlanes, 500); // 延迟500ms后开始飞行
+    });
+  </script>
 </body>
 </html>
